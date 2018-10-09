@@ -39,14 +39,14 @@ def array_almost_equal(a1, a2, tol=np.finfo(type(1.0)).eps):
     return (np.abs(a1 - a2) < tol).all()
 
 # ***************************************************************************************************
-# Si = bulk('Si', 'fcc', a=3.9, cubic=True)
-a0 = 3.9
-Si = Atoms('Si', [(0, 0, 0)],
-           pbc=True)
-b = a0 / 2
-Si.set_cell([(0, b, b),
-             (b, 0, b),
-             (b, b, 0)], scale_atoms=True)
+Si = bulk('Si', 'fcc', a=3.9, cubic=True)
+#a0 = 3.9
+#Si = Atoms('Si', [(0, 0, 0)],
+#           pbc=True)
+#b = a0 / 2
+#Si.set_cell([(0, b, b),
+#             (b, 0, b),
+#             (b, b, 0)], scale_atoms=True)
 
 # co = Atoms('CO', positions=[(0, 0, 0), (0, 0, d)],
 #              pbc=True)
