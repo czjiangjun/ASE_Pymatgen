@@ -58,6 +58,8 @@ class Example(wx.Frame):
         hbox1.Add(btn0, flag=wx.LEFT, border=8)
         btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
         self.vbox.Add((-1, 10))
+#        button=wx.Button(self.panel,label="OK",pos=(800, 400), size = (50,50))
+#        btn0.Bind(wx.EVT_BUTTON, self.newwindow,button)
 
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         st2 = wx.StaticText(self.panel, label='Generate_Structure')
@@ -255,6 +257,24 @@ class Example(wx.Frame):
 
     def OnExit(self, event):
         self.Close()
+
+
+    def newwindow(self, event):
+        secondWindow = window2(parent=self.panel)
+        secondWindow.Show()
+
+
+class window2(wx.Frame):
+
+    title = "new Window"
+
+    def __init__(self,parent):
+        wx.Frame.__init__(self,parent, -1,'Window2', size=(1000,700))
+        panel=wx.Panel(self, -1)
+
+        self.SetBackgroundColour(wx.Colour(100,100,100))
+        self.Centre()
+        self.Show()
 
 def main():
 
