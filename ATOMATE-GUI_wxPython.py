@@ -174,8 +174,8 @@ class Example(wx.Frame):
             element_index.SetFont(self.Font)
             hbox.Add(element_index, flag=wx.LEFT | wx. TOP, border=15)
             self.element = wx.TextCtrl(self.panel)
+            self.element.Bind(wx.EVT_TEXT, self.OnElement)
             hbox.Add(self.element, proportion=1)
-            self.Elements.append(self.element.GetValue())
             number_index = wx.StaticText(self.panel, label='Number:')
             hbox.Add(number_index, flag=wx.LEFT | wx. TOP, border=15)
 #        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
@@ -193,6 +193,7 @@ class Example(wx.Frame):
         hbox5 = wx.BoxSizer(wx.HORIZONTAL)
         btn3 = wx.Button(self.panel, label='Ok', size=(70, 30))
         hbox5.Add(btn3, flag=wx.LEFT, border=12)
+        btn3.Bind(wx.EVT_BUTTON,  self.Position)
         self.vbox.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
         self.vbox.Add((-1, 10))
         self.Centre()
@@ -201,8 +202,23 @@ class Example(wx.Frame):
 
         i = e.GetString()
 #        self.st.SetLabel(i)
-        self.Nums.append(int(self.st.GetLabel()))
 
+        self.Nums.append(i)
+        print(i)
+#        print(self.Nums)
+
+    def OnElement(self, e):
+
+        i = e.GetValue()
+        self.element.SetLabel(i)
+
+        self.Elements.append(i)
+        print(i)
+#        print(self.Nums)
+
+    def Position(self, event):
+        print(self.Elements)
+        print(self.Nums)
 
 #        splitter1 = wx.SplitterWindow(self, style=wx.SP_3D, size=(450,400))
 #        splitter2 = wx.SplitterWindow(splitter1, style=wx.SP_3D, size=(350,300))
