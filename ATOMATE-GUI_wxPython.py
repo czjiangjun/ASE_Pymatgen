@@ -272,12 +272,65 @@ class window2(wx.Frame):
     title = "new Window"
 
     def __init__(self,parent):
-        wx.Frame.__init__(self,parent, -1,'Window2', size=(1000,700))
-        panel=wx.Panel(self, -1)
+        wx.Frame.__init__(self,parent, -1,title ='Construct_Parameter', size=(1000,700))
+        self.panel2=wx.Panel(self, -1)
 
-        self.SetBackgroundColour(wx.Colour(100,100,100))
+#        self.SetBackgroundColour(wx.Colour(100,100,100))
+        font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
+
+        font.SetPointSize(12)
+        self.Font = font
+
+        self.vbox = wx.BoxSizer(wx.VERTICAL)
+        hbox0 = wx.BoxSizer(wx.HORIZONTAL)
+        str_element = wx.StaticText(self.panel2, label='Input The Parameter of Crystal')
+#        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
+#        str_element.SetFont(self.Font)
+        hbox0.Add(str_element, flag=wx.RIGHT, border=25)
+        self.vbox.Add(hbox0, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=40)
+
+        btn0 = wx.Button(self.panel2, label='Open', pos=(500,20), size=(50, 30))
+        hbox0.Add(btn0, flag=wx.RIGHT, border=8)
+        btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
+        self.vbox.Add((-1, 10))
+
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+        str_vec = wx.StaticText(self.panel2, label='Vec_1', pos=(10,50))
+#        dialo = wx.TextEntryDialog(self, "Choose Type of Elements")
+        str_vec.SetFont(self.Font)
+        hbox1.Add(str_vec, flag = wx.TOP, border=10)
+
+        self.tc1 = wx.TextCtrl(self.panel2)
+        hbox1.Add(self.tc1, proportion=2, flag= wx.RIGHT, border=30)
+#        self.tc2 = wx.TextCtrl(self.panel2)
+#        hbox1.Add(self.tc2, proportion=1, flag= wx.TOP, border=20)
+#        self.tc3 = wx.TextCtrl(self.panel2)
+#        hbox1.Add(self.tc3, proportion=1, flag= wx.TOP, border=20)
+#
+        self.vbox.Add(hbox1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=30)
+        self.vbox.Add((-1, 10))
+#
+#
+#        hbox2 = wx.BoxSizer(wx.HORIZONTAL)
+#        btn1 = wx.Button(self.panel2, label='Generate', size=(50, 30))
+#        hbox2.Add(btn1, flag=wx.LEFT, border=12)
+##        btn1.Bind(wx.EVT_BUTTON,  self.Position)
+##        exit()
+#        self.vbox.Add(hbox2, flag=wx.LEFT | wx.TOP, border=30)
+#        self.vbox.Add((-1, 10))
+
         self.Centre()
         self.Show()
+
+    def LoadFiles(self, event):
+
+#        win = wx.FileDialog(self, -1, u'子窗口')    #创建子窗口
+        self.Centre()
+        dialog = wx.FileDialog(self, "Choose a file", os.getcwd(),
+            "")
+        if dialog.ShowModal() == wx.ID_OK:
+             print(dialog.GetPath())
+             self.Destroy()
 
 def main():
 
