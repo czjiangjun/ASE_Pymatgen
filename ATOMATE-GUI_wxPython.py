@@ -58,8 +58,7 @@ class Example(wx.Frame):
         hbox1.Add(btn0, flag=wx.LEFT, border=8)
         btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
         self.vbox.Add((-1, 10))
-#        button=wx.Button(self.panel,label="OK",pos=(800, 400), size = (50,50))
-#        btn0.Bind(wx.EVT_BUTTON, self.newwindow,button)
+
 
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         st2 = wx.StaticText(self.panel, label='Generate_Structure')
@@ -71,8 +70,8 @@ class Example(wx.Frame):
         btn1 = wx.Button(self.panel, label='Generate', size=(50, 30))
         hbox2.Add(btn1, flag=wx.LEFT, border=12)
         btn1.Bind(wx.EVT_BUTTON,  self.Generate)
-        self.vbox.Add((-1, 10))
 
+        self.vbox.Add((-1, 10))
         self.panel.SetSizer(self.vbox)
 
 
@@ -148,36 +147,43 @@ class Example(wx.Frame):
              self.Destroy()
 
     def Generate(self, event):
-        str_element = wx.StaticText(self.panel, label='Type_of_Elements')
+#        self.vbox.Add((-1, 10))
+        hbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        str_element = wx.StaticText(self.panel, label='Type_of_Elements, separated by comma')
 #        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
         str_element.SetFont(self.Font)
-        hbox3 = wx.BoxSizer(wx.HORIZONTAL)
-        hbox3.Add(str_element, flag=wx.LEFT | wx. TOP, border=15)
-        self.tc = wx.TextCtrl(self.panel)
-        hbox3.Add(self.tc, proportion=1)
-        btn1 = wx.Button(self.panel, label='Generate', size=(50, 30))
-        hbox3.Add(btn1, flag=wx.LEFT, border=12)
-        btn1.Bind(wx.EVT_BUTTON,  self.Model)
+        hbox3.Add(str_element, flag=wx.LEFT | wx. TOP, border=20)
         self.vbox.Add(hbox3, flag=wx.RIGHT | wx.TOP, border=10)
+        self.vbox.Add((-1, 10))
+        hbox4 = wx.BoxSizer(wx.HORIZONTAL)
+        self.tc = wx.TextCtrl(self.panel)
+        hbox4.Add(self.tc, proportion=1, flag=wx.LEFT | wx. TOP, border=20)
+        btn1 = wx.Button(self.panel, label='Generate', size=(50, 30))
+        hbox4.Add(btn1, flag=wx.LEFT, border=12)
+        btn1.Bind(wx.EVT_BUTTON,  self.Model)
+        self.vbox.Add(hbox4, flag=wx.RIGHT | wx.TOP, border=10)
         self.vbox.Add((-1, 10))
 
 
         self.Centre()
 
     def Model(self, event):
-        Num_element = int(self.tc.GetValue())
-#        print(Num_element)
+        elements = [i.strip() for i in self.tc.GetValue().split(',') if i.strip()!='']
+#        print(elements)
+#        exit()
         Index_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
-        for i in range(Num_element):
+        for i in elements:
+            self.Elements.append(i)
 
             hbox = wx.BoxSizer(wx.HORIZONTAL)
-            element_index = wx.StaticText(self.panel, label='Element:')
+            element_index = wx.StaticText(self.panel, label='Element:'+i)
             element_index.SetFont(self.Font)
             hbox.Add(element_index, flag=wx.LEFT | wx. TOP, border=15)
-            self.element = wx.TextCtrl(self.panel)
-            self.element.Bind(wx.EVT_TEXT, self.OnElement)
-            hbox.Add(self.element, proportion=1)
+#            self.element = wx.TextCtrl(self.panel)
+#            self.element.Bind(wx.EVT_TEXT, self.OnElement)
+#            hbox.Add(self.element, proportion=1)
+
             number_index = wx.StaticText(self.panel, label='Number:')
             hbox.Add(number_index, flag=wx.LEFT | wx. TOP, border=15)
 #        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
@@ -192,12 +198,17 @@ class Example(wx.Frame):
 #        self.SetTitle('wx.ComboBox')
             self.vbox.Add(hbox, flag=wx.RIGHT | wx.TOP, border=10)
             self.vbox.Add((-1, 10))
+
+#        self.vbox.Add((-1, 10))
         hbox5 = wx.BoxSizer(wx.HORIZONTAL)
-        btn3 = wx.Button(self.panel, label='Ok', size=(70, 30))
-        hbox5.Add(btn3, flag=wx.LEFT, border=12)
-        btn3.Bind(wx.EVT_BUTTON,  self.Position)
+#        btn5 = wx.Button(self.panel,label="OK",pos=(800, 400), size = (70,30))
+        btn5 = wx.Button(self.panel,label="OK", size = (70,30))
+        hbox5.Add(btn5)
         self.vbox.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
         self.vbox.Add((-1, 10))
+
+#        btn3.Bind(wx.EVT_BUTTON,  self.Position)
+        btn5.Bind(wx.EVT_BUTTON, self.newwindow, btn5)
         self.Centre()
 
     def OnSelect(self, e):
@@ -206,21 +217,13 @@ class Example(wx.Frame):
 #        self.st.SetLabel(i)
 
         self.Nums.append(i)
-        print(i)
+#        print(i)
 #        print(self.Nums)
 
-    def OnElement(self, e):
 
-        i = e.GetValue()
-        self.element.SetLabel(i)
-
-        self.Elements.append(i)
-        print(i)
-#        print(self.Nums)
-
-    def Position(self, event):
-        print(self.Elements)
-        print(self.Nums)
+#    def Position(self, event):
+ #       print(self.Elements)
+ #       print(self.Nums)
 
 #        splitter1 = wx.SplitterWindow(self, style=wx.SP_3D, size=(450,400))
 #        splitter2 = wx.SplitterWindow(splitter1, style=wx.SP_3D, size=(350,300))
