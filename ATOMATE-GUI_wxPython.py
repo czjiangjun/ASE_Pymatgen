@@ -34,6 +34,7 @@ class Example(wx.Frame):
         LLoad = False
 
         self.panel = wx.Panel(self)
+#        self.panel = wx.Panel(self)
 
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
 
@@ -68,9 +69,8 @@ class Example(wx.Frame):
         self.Font = font
         btn1 = wx.Button(self.panel, label='Generate', size=(50, 30))
         hbox2.Add(btn1, flag=wx.LEFT, border=12)
-        btn1.Bind(wx.EVT_BUTTON, self.newwindow, btn1)
-
-#        self.vbox.Add((-1, 10))
+#        btn1.Bind(wx.EVT_BUTTON, self.newwindow, btn1)
+        btn1.Bind(wx.EVT_BUTTON,  self.Generate)
 
         self.panel.SetSizer(self.vbox)
 
@@ -188,8 +188,8 @@ class Example(wx.Frame):
     def OnExit(self, event):
         self.Close()
 
-
-    def newwindow(self, event):
+    def Generate(self, event):
+        self.panel.Hide()
         secondWindow = window2(parent=self.panel)
         secondWindow.Show()
 
@@ -202,77 +202,18 @@ class window2(wx.Frame):
         wx.Frame.__init__(self,parent, -1,title ='Construct_Parameter', size=(1000,300))
         self.panel2=wx.Panel(self, -1)
 
-        self.Elements = []
-        self.Nums = []
-        Total_atoms = 0
-        for i in self.Nums:
-            Total_atoms = Total_atoms+int(i) 
-        print(Total_atoms)
-#        self.SetBackgroundColour(wx.Colour(100,100,100))
+        self.Generate_UI()
+        self.Centre()
+
+    def Generate_UI(self):
+
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
 
         font.SetPointSize(12)
         self.Font = font
 
-
-
+#        self.panel.Hide()
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
-        hbox0 = wx.BoxSizer(wx.HORIZONTAL)
-        str_element = wx.StaticText(self.panel2, label='Input The Parameter of Crystal')
-#        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
-#        str_element.SetFont(self.Font)
-        hbox0.Add(str_element, flag=wx.RIGHT, border=25)
-        self.vbox2.Add(hbox0, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=40)
-
-#        btn0 = wx.Button(self.panel2, label='Open', pos=(500,0), size=(50, 20))
-#        hbox0.Add(btn0, flag=wx.RIGHT, border=8)
-#        btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
-        self.vbox2.Add((-1, 10))
-
-        for i in range(3):
-            hbox = wx.BoxSizer(wx.HORIZONTAL)
-            str_vec = wx.StaticText(self.panel2, label='Vec_'+str(i))
-            hbox.Add(str_vec, 1, flag = wx.TOP, border=10)
-#            str_vec = wx.StaticText(self.panel2, label='Vec_1', pos=(500,50))
-#            dialo = wx.TextEntryDialog(self, "Choose Type of Elements")
-#            str_vec.SetFont(self.Font)
-
-            self.tc1 = wx.TextCtrl(self.panel2)
-            hbox.Add(self.tc1, proportion=1, border=10)
-            hbox.Add((15,10))
-            self.tc2 = wx.TextCtrl(self.panel2)
-            hbox.Add(self.tc2, proportion=1, border=10)
-            hbox.Add((15,10))
-            self.tc3 = wx.TextCtrl(self.panel2)
-            hbox.Add(self.tc3, proportion=1, border=10)
-
-            self.vbox2.Add(hbox, proportion=1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
-            self.vbox2.Add((-1, 10))
-#
-#        self.vbox2.Add(hbox2, proportion=1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=30)
-        hbox4 = wx.BoxSizer(wx.HORIZONTAL)
-        cb = wx.CheckBox(self.panel2, label='Select Dynamics')
-        cb.SetFont(font)
-        hbox4.Add(cb)
-        self.vbox2.Add((-1, 10))
-        self.vbox2.Add(hbox4, flag=wx.LEFT, border=10)
-#
-#
-        hbox5 = wx.BoxSizer(wx.HORIZONTAL)
-        btn5 = wx.Button(self.panel2, label='Generate', size=(50, 30))
-        hbox5.Add(btn5)
-        btn5.Bind(wx.EVT_BUTTON,  self.Generate)
-        self.vbox2.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
-#        hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-#        btn1 = wx.Button(self.panel2, label='Generate', size=(50, 30))
-#        hbox2.Add(btn1, flag=wx.LEFT, border=12)
-##        btn1.Bind(wx.EVT_BUTTON,  self.Position)
-        self.panel2.SetSizer(self.vbox2)
-        self.Show()
-        self.Centre()
-
-    def Generate(self, event):
-#        self.vbox.Add((-1, 10))
         hbox3 = wx.BoxSizer(wx.HORIZONTAL)
         str_element = wx.StaticText(self.panel2, label='Type_of_Elements, separated by comma')
 #        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
@@ -280,26 +221,29 @@ class window2(wx.Frame):
         hbox3.Add(str_element, flag=wx.LEFT | wx. TOP, border=20)
         self.vbox2.Add(hbox3, flag=wx.RIGHT | wx.TOP, border=10)
         self.vbox2.Add((-1, 10))
+
+
         hbox4 = wx.BoxSizer(wx.HORIZONTAL)
         self.tc = wx.TextCtrl(self.panel2)
         hbox4.Add(self.tc, proportion=1, flag=wx.LEFT | wx. TOP, border=20)
-        btn1 = wx.Button(self.panel2, label='Generate', size=(50, 30))
-        hbox4.Add(btn1, flag=wx.LEFT, border=12)
-        btn1.Bind(wx.EVT_BUTTON,  self.Model)
-        self.vbox2.Add(hbox4, flag=wx.RIGHT | wx.TOP, border=10)
-        self.vbox2.Add((-1, 10))
+        btn4 = wx.Button(self.panel2, label='Modeling', size=(50, 30))
+        hbox4.Add(btn4, flag=wx.LEFT, border=12)
+        btn4.Bind(wx.EVT_BUTTON,  self.Model)
+        self.vbox2.Add(hbox4, flag=wx.RIGHT | wx.TOP, border=20)
 
-
-        self.Centre()
+        self.panel2.SetSizer(self.vbox2)
+        self.Show()
 
     def Model(self, event):
+
+        self.Nums = []
         elements = [i.strip() for i in self.tc.GetValue().split(',') if i.strip()!='']
 #        print(elements)
+        self.Elements = elements
 #        exit()
         Index_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
         for i in elements:
-            self.Elements.append(i)
 
             hbox = wx.BoxSizer(wx.HORIZONTAL)
             element_index = wx.StaticText(self.panel2, label='Element:'+i)
@@ -323,35 +267,165 @@ class window2(wx.Frame):
 #        self.SetTitle('wx.ComboBox')
             self.vbox2.Add(hbox, flag=wx.RIGHT | wx.TOP, border=10)
             self.vbox2.Add((-1, 10))
-
-        print('TEST')
-        print(self.Nums)
-#        self.vbox.Add(hbox2, flag=wx.LEFT | wx.TOP, border=30)
-#        self.vbox.Add((-1, 10))
          
 
         Total_Atoms = 0
         for i in self.Nums:
             Total_Atoms = Total_Atoms + int(i)
 
-        print(Total_Atoms)
-#        self.vbox.Add((-1, 10))
         hbox5 = wx.BoxSizer(wx.HORIZONTAL)
-#        btn5 = wx.Button(self.panel2,label="OK",pos=(800, 400), size = (70,30))
-        btn5 = wx.Button(self.panel2,label="OK", size = (70,30))
+        btn5 = wx.Button(self.panel2, label='OK', size=(50, 30))
         hbox5.Add(btn5)
+#        btn5.Bind(wx.EVT_BUTTON,  self.Generate)
+        self.vbox2.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
+        btn5.Bind(wx.EVT_BUTTON,  self.Position)
         self.vbox2.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
         self.vbox2.Add((-1, 10))
 
+#        self.vbox.Add((-1, 10))
 #        btn3.Bind(wx.EVT_BUTTON,  self.Position)
     def OnSelect(self, e):
 
         i = e.GetString()
-#        self.st.SetLabel(i)
-
         self.Nums.append(i)
-#        print(i)
-        print(self.Nums)
+#        print(self.Nums)
+
+    def Position(self, event):
+
+#        print(self.Elements)
+#        print(self.Nums)
+        thirdWindow = window3(parent=self.panel2, Elements=self.Elements, Nums=self.Nums)
+        thirdWindow.Show()
+
+class window3(wx.Frame):
+
+#    title = "new Window"
+
+    def __init__(self, parent, Elements, Nums):
+        wx.Frame.__init__(self,parent, -1,title ='Construct_Parameter', size=(1000,300))
+        self.panel3=wx.Panel(self, -1)
+#        print(Nums)
+#        exit()
+        self.Position_UI(Elements, Nums)
+        self.Centre()
+
+    def Position_UI(self, Elements, Nums):
+        Total_atoms = 0
+        self.vec=[]
+        self.atom=[]
+        self.atoms=Elements
+        self.nums=Nums
+        self.name=''
+        for i in Elements:
+            if (int(Nums[Elements.index(i)])>1):
+               self.name=self.name+i+Nums[Elements.index(i)]
+            else:
+               self.name=self.name+i
+
+        for i in Nums:
+            Total_atoms = Total_atoms+int(i) 
+#        self.SetBackgroundColour(wx.Colour(100,100,100))
+        self.total=Total_atoms
+        font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
+
+        font.SetPointSize(12)
+        self.Font = font
+
+        self.vbox2 = wx.BoxSizer(wx.VERTICAL)
+        hbox0 = wx.BoxSizer(wx.HORIZONTAL)
+        str_element = wx.StaticText(self.panel3, label='Input The Parameter of Crystal')
+#        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
+#        str_element.SetFont(self.Font)
+        hbox0.Add(str_element, flag=wx.RIGHT, border=25)
+        self.vbox2.Add(hbox0, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=40)
+
+#        btn0 = wx.Button(self.panel3, label='Open', pos=(500,0), size=(50, 20))
+#        hbox0.Add(btn0, flag=wx.RIGHT, border=8)
+#        btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
+        self.vbox2.Add((-1, 10))
+
+        for i in range(3):
+            vec_i=[]
+            hbox = wx.BoxSizer(wx.HORIZONTAL)
+            str_vec = wx.StaticText(self.panel3, label='Vec_'+str(i))
+            hbox.Add(str_vec, 1, flag = wx.TOP, border=10)
+#            str_vec = wx.StaticText(self.panel3, label='Vec_1', pos=(500,50))
+#            dialo = wx.TextEntryDialog(self, "Choose Type of Elements")
+#            str_vec.SetFont(self.Font)
+
+            tc1 = wx.TextCtrl(self.panel3)
+            hbox.Add(tc1, proportion=1, border=10)
+            vec_i.append(tc1)
+            hbox.Add((15,10))
+            tc2 = wx.TextCtrl(self.panel3)
+            hbox.Add(tc2, proportion=1, border=10)
+            vec_i.append(tc2)
+            hbox.Add((15,10))
+            tc3 = wx.TextCtrl(self.panel3)
+            vec_i.append(tc3)
+            hbox.Add(tc3, proportion=1, border=10)
+
+            self.vbox2.Add(hbox, proportion=1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
+            self.vbox2.Add((-1, 10))
+            self.vec.append(vec_i)
+#
+#        self.vbox2.Add(hbox2, proportion=1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=30)
+        hbox4 = wx.BoxSizer(wx.HORIZONTAL)
+        self.cb = wx.CheckBox(self.panel3, label='Select Dynamics')
+        self.cb.SetFont(font)
+        hbox4.Add(self.cb)
+        self.vbox2.Add((-1, 10))
+        self.vbox2.Add(hbox4, flag=wx.LEFT, border=10)
+#
+        for i in range(Total_atoms):
+            vec_i=[]
+            hbox = wx.BoxSizer(wx.HORIZONTAL)
+            str_vec = wx.StaticText(self.panel3, label='Vec_'+str(i))
+            hbox.Add(str_vec, 1, flag = wx.TOP, border=10)
+#            str_vec = wx.StaticText(self.panel3, label='Vec_1', pos=(500,50))
+#            dialo = wx.TextEntryDialog(self, "Choose Type of Elements")
+#            str_vec.SetFont(self.Font)
+
+            tc1 = wx.TextCtrl(self.panel3)
+            hbox.Add(tc1, proportion=1, border=10)
+            vec_i.append(tc1)
+            hbox.Add((15,10))
+            tc2 = wx.TextCtrl(self.panel3)
+            hbox.Add(tc2, proportion=1, border=10)
+            vec_i.append(tc2)
+            hbox.Add((15,10))
+            tc3 = wx.TextCtrl(self.panel3)
+            vec_i.append(tc3)
+            hbox.Add(tc3, proportion=1, border=10)
+
+            self.vbox2.Add(hbox, proportion=1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
+            self.vbox2.Add((-1, 10))
+            self.atom.append(vec_i)
+
+        hbox5 = wx.BoxSizer(wx.HORIZONTAL)
+        btn1 = wx.Button(self.panel3, label='OK', size=(50, 30))
+        hbox5.Add(btn1, flag=wx.LEFT, border=12)
+        btn1.Bind(wx.EVT_BUTTON,  self.POSCAR)
+        self.panel3.SetSizer(self.vbox2)
+        self.Show()
+
+    def POSCAR(self, event):
+        print(self.name)
+        print('   1.000000')
+        for i in range(3):
+            for j in self.vec[i]:
+                print(j.GetValue())
+        print(self.atoms)
+        print(self.nums)
+        if (self.cb.GetValue()):
+            print('Select Dynamics')
+        print('Direct')
+        self.Destroy()
+        for i in range(self.total):
+            for j in self.atom[i]:
+                print(j.GetValue())
+
+
 
 def main():
 
