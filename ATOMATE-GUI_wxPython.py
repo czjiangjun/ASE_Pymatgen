@@ -4,19 +4,59 @@
 from pathlib import Path
 import os
 import wx
+import wx.adv
 
-class MyTextDropTarget(wx.TextDropTarget):
+class configWizard(wx.adv.Wizard):
+    def __init__(self, addNew = False):
+        super(configWizard, self).__init__(None, -1, "Configuration Wizard")
 
-    def __init__(self, object):
+        self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGED, self.OnPageChanged)
+        self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGING, self.OnPageChanging)
 
-        wx.TextDropTarget.__init__(self)
-        self.object = object
+        self.firstInfoPage = Info1Page(self,'title1')
+        self.machineSelectPage = Info2Page(self,'title2')
 
-    def OnDropText(self, x, y, data):
+        wx.adv.WizardPageSimple.Chain(self.firstInfoPage, self.machineSelectPage)
 
-        self.object.InsertItem(0, data)
+        # self.GetPageAreaSizer().Add(self.firstInfoPage)
+        self.RunWizard(self.firstInfoPage)
+        self.Destroy()
+
+    def OnPageChanging(self, e):
+        print(e.GetPage())
+        # e.GetPage().StoreData()
+
+    def OnPageChanged(self, e):
+        if e.GetPage().AllowNext():
+            self.FindWindowById(wx.ID_FORWARD).Enable()
+        else:
+            self.FindWindowById(wx.ID_FORWARD).Disable()
+        if e.GetPage().AllowBack():
+            self.FindWindowById(wx.ID_BACKWARD).Enable()
+        else:
+            self.FindWindowById(wx.ID_BACKWARD).Disable()
+
+
+class Info1Page(wx.adv.WizardPageSimple):
+    def __init__(self, parent, title):
+        wx.adv.WizardPageSimple.__init__(self, parent)
+        sizer = wx.GridBagSizer(5, 5)
+        self.sizer = sizer
+        self.SetSizer(sizer)
+
+        title = wx.StaticText(self, -1, title)
+        title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+        sizer.Add(title, pos=(0, 0), span=(1, 2), flag=wx.ALIGN_CENTRE | wx.ALL)
+        sizer.Add(wx.StaticLine(self, -1), pos=(1, 0), span=(1, 2), flag=wx.EXPAND | wx.ALL)
+        sizer.AddGrowableCol(1)
+
+    def  AllowNext(self):
+        print(1)
         return True
 
+    def AllowBack(self):
+        print(2)
+        return False
 
 
 
@@ -31,7 +71,8 @@ class Example(wx.Frame):
         self.Centre()
 
     def InitUI(self):
-        LLoad = False
+#        configWizard()
+        self.LLoad = False
 
         self.panel = wx.Panel(self)
 #        self.panel = wx.Panel(self)
@@ -42,7 +83,6 @@ class Example(wx.Frame):
 
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 
-        LLoad = True
 
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         st1 = wx.StaticText(self.panel, label='Load From File')
@@ -77,54 +117,6 @@ class Example(wx.Frame):
 
 
 
-        if LLoad == False :
-
-           hbox3 = wx.BoxSizer(wx.HORIZONTAL)
-           tc2 = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE)
-           hbox3.Add(tc2, proportion=1, flag=wx.EXPAND)
-           vbox.Add(hbox3, proportion=1, flag=wx.LEFT|wx.RIGHT|wx.EXPAND,
-                 border=10)
-
-           vbox.Add((-1, 25))
-
-           hbox4 = wx.BoxSizer(wx.HORIZONTAL)
-           cb1 = wx.CheckBox(self.panel, label='Case Sensitive')
-           cb1.SetFont(font)
-           hbox4.Add(cb1)
-           cb2 = wx.CheckBox(self.panel, label='Nested Classes')
-           cb2.SetFont(font)
-           hbox4.Add(cb2, flag=wx.LEFT, border=10)
-           cb3 = wx.CheckBox(self.panel, label='Non-Project classes')
-           cb3.SetFont(font)
-           hbox4.Add(cb3, flag=wx.LEFT, border=10)
-           vbox.Add(hbox4, flag=wx.LEFT, border=10)
-
-           vbox.Add((-1, 25))
-
-           hbox5 = wx.BoxSizer(wx.HORIZONTAL)
-           btn1 = wx.Button(self.panel, label='Ok', size=(70, 30))
-           hbox5.Add(btn1)
-           btn2 = wx.Button(self.panel, label='Close', size=(70, 30))
-           hbox5.Add(btn2)
-
-#        exitButton = wx.Button(self.panel, wx.ID_ANY, 'Exit', size=(70, 30))
-           btn3 = wx.Button(self.panel, wx.ID_ANY, 'Exit', size=(70, 30))
-
-           self.Bind(wx.EVT_BUTTON,  self.OnExit, id=btn3.GetId())
-#        self.SetTitle("Automatic ids")
-
-           hbox5.Add(btn3, flag=wx.LEFT|wx.BOTTOM, border=5)
-           vbox.Add(hbox5, flag=wx.ALIGN_RIGHT|wx.RIGHT, border=10)
-
-
-#        pnl = wx.Panel(self)
-#        exitButton = wx.Button(self.panel, wx.ID_ANY, 'Exit', size=(70, 30))
-#
-#        self.Bind(wx.EVT_BUTTON,  self.OnExit, id=exitButton.GetId())
-#
-#        self.SetTitle("Automatic ids")
-#
-
 # ***** BackgroundColour *********
 #        self.panel.SetBackgroundColour("gray")
 #        self.LoadImages()
@@ -139,7 +131,7 @@ class Example(wx.Frame):
     def LoadFiles(self, event):
 
 #        win = wx.FileDialog(self, -1, u'子窗口')    #创建子窗口
-        self.Centre()
+        self.LLoad = True
         dialog = wx.FileDialog(self, "Choose a file", os.getcwd(),
             "")
         if dialog.ShowModal() == wx.ID_OK:
@@ -147,43 +139,24 @@ class Example(wx.Frame):
              self.Destroy()
 
 
-
-#    def Position(self, event):
- #       print(self.Elements)
- #       print(self.Nums)
-
-#        splitter1 = wx.SplitterWindow(self, style=wx.SP_3D, size=(450,400))
-#        splitter2 = wx.SplitterWindow(splitter1, style=wx.SP_3D, size=(350,300))
-
-#        home_dir = str(Path.home())
-
-#        self.dirWid = wx.GenericDirCtrl(splitter1, dir=home_dir, 
-#                style=wx.DIRCTRL_DIR_ONLY)
-                
-#        self.lc1 = wx.ListCtrl(splitter2, style=wx.LC_LIST)
-#        self.lc2 = wx.ListCtrl(splitter2, style=wx.LC_LIST)
-
-#        dt = MyTextDropTarget(self.lc2)
-#        self.lc2.SetDropTarget(dt)
-        
-#        self.Bind(wx.EVT_LIST_BEGIN_DRAG, self.OnDragInit, id=self.lc1.GetId())
-
-#        tree = self.dirWid.GetTreeCtrl()
-
-#        splitter2.SplitHorizontally(self.lc1, self.lc2, 150)
-#        splitter1.SplitVertically(self.dirWid, splitter2, 200)
-
-#        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelect, id=tree.GetId())
-
-#        self.OnSelect(3)
-
-#        self.SetTitle('Drag and drop text')
-
-
     def LoadImages(self):
+#        bitmap = wx.Bitmap(path)
+#        bitmap = wx.Bitmap("/home/jun_jiang/Softs/ASE_Pymatgen/BCC_logo-1.png")
+        bitmap = wx.Bitmap("BCC_logo-1.png")
+#        bitmap = scale_bitmap(bitmap, 300, 200)
+        bitmap = self.scale_bitmap(bitmap, 300, 70)
+#        control = wx.StaticBitmap(self, -1, bitmap)
+        self.rotunda = wx.StaticBitmap(self.panel, wx.ID_ANY, bitmap)
+#        control.SetPosition((10, 10))
+        self.rotunda.SetPosition((10, 10))
 
-        self.rotunda = wx.StaticBitmap(self.panel, wx.ID_ANY,
-            wx.Bitmap("BCC_logo-1.png", wx.BITMAP_TYPE_ANY))
+    def scale_bitmap(self, bitmap, width, height):
+#        image = wx.ImageFromBitmap(bitmap)
+        image = bitmap.ConvertToImage()
+        image = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
+#        result = wx.BitmapFromImage(image)
+        result = wx.Bitmap(image)
+        return result
 
     def OnExit(self, event):
         self.Close()
@@ -193,6 +166,20 @@ class Example(wx.Frame):
         secondWindow = window2(parent=self.panel)
         secondWindow.Show()
 
+
+#class Figures(wx.Panel):
+#    def __init__(self, parent, path):
+#        super(Panel, self).__init__(parent, -1)
+#        bitmap = wx.Bitmap(path)
+#        bitmap = scale_bitmap(bitmap, 300, 200)
+#        control = wx.StaticBitmap(self, -1, bitmap)
+#        control.SetPosition((10, 10))
+#
+#    def scale_bitmap(bitmap, width, height):
+#        image = wx.ImageFromBitmap(bitmap)
+#        image = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
+#        result = wx.BitmapFromImage(image)
+#        return result
 
 class window2(wx.Frame):
 
