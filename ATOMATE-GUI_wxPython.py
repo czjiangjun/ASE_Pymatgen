@@ -162,7 +162,6 @@ class Example(wx.Frame):
         self.Close()
 
     def Generate(self, event):
-        self.panel.Hide()
         secondWindow = window2(parent=self.panel)
         secondWindow.Show()
 
@@ -194,12 +193,12 @@ class window2(wx.Frame):
 
     def Generate_UI(self):
 
+#        self.panel.Hide()
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
 
         font.SetPointSize(12)
         self.Font = font
 
-#        self.panel.Hide()
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         hbox3 = wx.BoxSizer(wx.HORIZONTAL)
         str_element = wx.StaticText(self.panel2, label='Type_of_Elements, separated by comma')
