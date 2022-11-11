@@ -5,6 +5,7 @@ from pathlib import Path
 import os
 import wx
 import wx.adv
+import wx.grid as gridlib
 
 class configWizard(wx.adv.Wizard):
     def __init__(self, addNew = False):
@@ -58,6 +59,152 @@ class Info1Page(wx.adv.WizardPageSimple):
         print(2)
         return False
 
+class PanelOne(wx.Panel):
+    """""" 
+    def __init__(self, parent):
+        """Load_Or_Create_A_POSCAR"""
+        wx.Panel.__init__(self, parent=parent, size=(500,300))
+#        txt = wx.TextCtrl(self)
+        self.InitUI()
+        self.Centre()
+
+    def InitUI(self):
+        self.vbox = wx.BoxSizer(wx.VERTICAL)
+
+        font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
+        font.SetPointSize(12)
+
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+        self.vbox.Add((-1, 80))
+        st1 = wx.StaticText(self, label='Load From File')
+        st1.SetFont(font)
+        hbox1.Add(st1, flag=wx.RIGHT, border=8)
+
+        self.vbox.Add(hbox1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
+        btn0 = wx.Button(self, label='Open', size=(50, 30))
+        hbox1.Add(btn0, flag=wx.LEFT, border=8)
+        btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
+#        self.Destroy()
+#        self.panel.Hide()
+
+#        tc = wx.TextCtrl(self)
+#        hbox1.Add(tc, proportion=1)
+        self.SetSizer(self.vbox)
+
+        self.Centre()
+
+    def LoadFiles(self, event):
+
+#        win = wx.FileDialog(self, -1, u'子窗口')    #创建子窗口
+        dialog = wx.FileDialog(self, "Choose a file", os.getcwd(),
+            "")
+        if dialog.ShowModal() == wx.ID_OK:
+             print(dialog.GetPath())
+             self.Destroy()
+
+
+class PanelTwo(wx.Panel):
+    """"""
+    def __init__(self, parent):
+        """Generate_A_POSCAR"""
+        wx.Panel.__init__(self, parent=parent)
+#        self.grid = gridlib.Grid(self)
+#        self.grid.CreateGrid(25,12)
+        self.Generate_UI()
+        self.Centre()
+
+    def Generate_UI(self):
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+#        sizer.Add(self.grid, 0, wx.EXPAND)
+
+        font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
+        font.SetPointSize(12)
+        self.Font = font
+
+        self.sizer.Add((-1, 80))
+#        self.vbox2 = wx.BoxSizer(wx.VERTICAL)
+        hbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        str_element = wx.StaticText(self, label='Type_of_Elements, separated by comma')
+#        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
+        str_element.SetFont(self.Font)
+        hbox3.Add(str_element, flag=wx.LEFT | wx. TOP, border=20)
+        self.sizer.Add(hbox3, flag=wx.RIGHT | wx.TOP, border=10)
+
+        hbox4 = wx.BoxSizer(wx.HORIZONTAL)
+        self.tc = wx.TextCtrl(self)
+        hbox4.Add(self.tc, proportion=1, flag=wx.LEFT | wx. TOP)
+        btn4 = wx.Button(self, label='Modeling', size=(80, 30))
+        hbox4.Add(btn4, flag=wx.LEFT, border=12)
+        btn4.Bind(wx.EVT_BUTTON,  self.Model)
+        self.sizer.Add(hbox4, flag=wx.RIGHT | wx.TOP, border=20)
+
+        self.SetSizer(self.sizer)
+        self.Show()
+
+    def Model(self, event):
+
+        self.Nums = []
+        elements = [i.strip() for i in self.tc.GetValue().split(',') if i.strip()!='']
+#        print(elements)
+        self.Elements = elements
+#        exit()
+        Index_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
+        for i in elements:
+
+            hbox = wx.BoxSizer(wx.HORIZONTAL)
+            element_index = wx.StaticText(self, label='Element:'+i)
+            element_index.SetFont(self.Font)
+            hbox.Add(element_index, flag=wx.LEFT | wx. TOP, border=15)
+#            self.element = wx.TextCtrl(self)
+#            self.element.Bind(wx.EVT_TEXT, self.OnElement)
+#            hbox.Add(self.element, proportion=1)
+
+            number_index = wx.StaticText(self, label='Number:')
+            hbox.Add(number_index, flag=wx.LEFT | wx. TOP, border=15)
+#        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
+            cb = wx.ComboBox(self, pos=(50, 30), choices=Index_num,
+                    style=wx.CB_READONLY)
+
+            self.st = wx.StaticText(self, label='', pos=(50, 140))
+            hbox.Add(cb, flag=wx.LEFT, border=12)
+            cb.Bind(wx.EVT_COMBOBOX, self.OnSelect)
+
+            self.SetSize((550, 530))
+#        self.SetTitle('wx.ComboBox')
+            self.sizer.Add(hbox, flag=wx.RIGHT | wx.TOP, border=10)
+            self.sizer.Add((-1, 10))
+         
+
+        Total_Atoms = 0
+        for i in self.Nums:
+            Total_Atoms = Total_Atoms + int(i)
+
+        hbox5 = wx.BoxSizer(wx.HORIZONTAL)
+        btn5 = wx.Button(self, label='OK', size=(50, 30))
+        hbox5.Add(btn5)
+#        btn5.Bind(wx.EVT_BUTTON,  self.Generate)
+        self.sizer.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
+        btn5.Bind(wx.EVT_BUTTON,  self.Position)
+        self.sizer.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
+        self.sizer.Add((-1, 10))
+
+        self.SetSizer(self.sizer)
+#        self.vbox.Add((-1, 10))
+#        btn3.Bind(wx.EVT_BUTTON,  self.Position)
+    def OnSelect(self, e):
+
+        i = e.GetString()
+        self.Nums.append(i)
+#        print(self.Nums)
+
+    def Position(self, event):
+
+#        print(self.Elements)
+#        print(self.Nums)
+        thirdWindow = window3(parent=self, Elements=self.Elements, Nums=self.Nums)
+        thirdWindow.Show()
+
 
 
 class Example(wx.Frame):
@@ -72,71 +219,75 @@ class Example(wx.Frame):
 
     def InitUI(self):
 #        configWizard()
-        self.LLoad = False
+        self.LoadImages()
 
-        self.panel = wx.Panel(self)
-#        self.panel = wx.Panel(self)
-
+#        self.vbox = wx.BoxSizer(wx.VERTICAL)
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
-
         font.SetPointSize(9)
-
-        self.vbox = wx.BoxSizer(wx.VERTICAL)
-
-
-        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        st1 = wx.StaticText(self.panel, label='Load From File')
-        st1.SetFont(font)
-        hbox1.Add(st1, flag=wx.RIGHT, border=8)
-
-        self.vbox.Add(hbox1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
-
-#        tc = wx.TextCtrl(self.panel)
-#        hbox1.Add(tc, proportion=1)
-        btn0 = wx.Button(self.panel, label='Open', size=(50, 30))
-        hbox1.Add(btn0, flag=wx.LEFT, border=8)
-        btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
-        self.vbox.Add((-1, 10))
-
-#        self.Destroy()
-#        self.panel.Hide()
-        hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-        st2 = wx.StaticText(self.panel, label='Generate_Structure')
-        st2.SetFont(font)
-        hbox2.Add(st2, flag=wx.RIGHT, border=8)
-        self.vbox.Add(hbox2, flag=wx.LEFT | wx.TOP, border=10)
-
         self.Font = font
-        btn1 = wx.Button(self.panel, label='Generate', size=(50, 30))
-        hbox2.Add(btn1, flag=wx.LEFT, border=12)
+
+        self.panel_one = PanelOne(self)
+        self.panel_two = PanelTwo(self)
+        self.panel_one.Hide()
+        self.panel_two.Hide()
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer.Add(self.panel_one, 1, wx.EXPAND)
+        self.sizer.Add(self.panel_two, 1, wx.EXPAND)
+
+        self.sizer.Add((-1, 80))
+        hbox1 = wx.BoxSizer(wx.HORIZONTAL)
+
+        #self.st1 = wx.StaticText(self, label='Load From File', pos=(0,250))
+        self.st1 = wx.StaticText(self, label='Load_From_File           ')
+        self.st1.SetFont(font)
+        hbox1.Add(self.st1, flag=wx.RIGHT, border=8)
+        self.sizer.Add(hbox1, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
+        self.btn0 = wx.Button(self, label='Open', size=(50, 30))
+        hbox1.Add(self.btn0, flag=wx.LEFT, border=8)
+        self.btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
+
+        self.sizer.Add((-1, 10))
+        hbox2 = wx.BoxSizer(wx.HORIZONTAL)
+        self.st2 = wx.StaticText(self, label='Generate_Structure')
+        self.st2.SetFont(font)
+        hbox2.Add(self.st2, flag=wx.RIGHT, border=8)
+        self.sizer.Add(hbox2, flag=wx.LEFT | wx.TOP, border=10)
+
+        self.btn1 = wx.Button(self, label='Generate', size=(60, 30))
+        hbox2.Add(self.btn1, flag=wx.LEFT, border=12)
 #        btn1.Bind(wx.EVT_BUTTON, self.newwindow, btn1)
-        btn1.Bind(wx.EVT_BUTTON,  self.Generate)
+        self.btn1.Bind(wx.EVT_BUTTON,  self.Generate)
 
-        self.panel.SetSizer(self.vbox)
+        self.SetSizer(self.sizer)
 
-
-
-
-# ***** BackgroundColour *********
-#        self.panel.SetBackgroundColour("gray")
-#        self.LoadImages()
-
-#        self.mincol.SetPosition((20, 20))
-#        self.bardejov.SetPosition((40, 160))
-#        self.rotunda.SetPosition((170, 50))
-#        self.rotunda.SetPosition((20, 20))
-
-        self.Centre()
-
+    def Generate(self, event):
+        """"""
+#        if self.panel_one.IsShown():
+        self.SetTitle("Generate_A_POSCAR")
+        self.SetSize((550, 530))
+        self.panel_one.Hide()
+        self.panel_two.Show()
+        self.st1.Hide()
+        self.st2.Hide()
+        self.btn0.Hide()
+        self.btn1.Hide()
+#        else:
     def LoadFiles(self, event):
+        """"""
+#        self.panel.Hide()
+        self.SetTitle("Choose_A_POSCAR")
+        self.panel_one.Show()
+        self.panel_two.Hide()
+        self.st1.Hide()
+        self.st2.Hide()
+        self.btn0.Hide()
+        self.btn1.Hide()
+        self.Layout()
 
-#        win = wx.FileDialog(self, -1, u'子窗口')    #创建子窗口
-        self.LLoad = True
-        dialog = wx.FileDialog(self, "Choose a file", os.getcwd(),
-            "")
-        if dialog.ShowModal() == wx.ID_OK:
-             print(dialog.GetPath())
-             self.Destroy()
+# Run the program
+
+#        secondWindow = window2(parent=self.panel)
+#        secondWindow.Show()
 
 
     def LoadImages(self):
@@ -146,7 +297,7 @@ class Example(wx.Frame):
 #        bitmap = scale_bitmap(bitmap, 300, 200)
         bitmap = self.scale_bitmap(bitmap, 300, 70)
 #        control = wx.StaticBitmap(self, -1, bitmap)
-        self.rotunda = wx.StaticBitmap(self.panel, wx.ID_ANY, bitmap)
+        self.rotunda = wx.StaticBitmap(self, wx.ID_ANY, bitmap)
 #        control.SetPosition((10, 10))
         self.rotunda.SetPosition((10, 10))
 
@@ -160,11 +311,6 @@ class Example(wx.Frame):
 
     def OnExit(self, event):
         self.Close()
-
-    def Generate(self, event):
-        secondWindow = window2(parent=self.panel)
-        secondWindow.Show()
-
 
 #class Figures(wx.Panel):
 #    def __init__(self, parent, path):
@@ -192,96 +338,7 @@ class window2(wx.Frame):
         self.Centre()
 
     def Generate_UI(self):
-
-#        self.panel.Hide()
-        font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
-
-        font.SetPointSize(12)
-        self.Font = font
-
-        self.vbox2 = wx.BoxSizer(wx.VERTICAL)
-        hbox3 = wx.BoxSizer(wx.HORIZONTAL)
-        str_element = wx.StaticText(self.panel2, label='Type_of_Elements, separated by comma')
-#        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
-        str_element.SetFont(self.Font)
-        hbox3.Add(str_element, flag=wx.LEFT | wx. TOP, border=20)
-        self.vbox2.Add(hbox3, flag=wx.RIGHT | wx.TOP, border=10)
-        self.vbox2.Add((-1, 10))
-
-
-        hbox4 = wx.BoxSizer(wx.HORIZONTAL)
-        self.tc = wx.TextCtrl(self.panel2)
-        hbox4.Add(self.tc, proportion=1, flag=wx.LEFT | wx. TOP, border=20)
-        btn4 = wx.Button(self.panel2, label='Modeling', size=(50, 30))
-        hbox4.Add(btn4, flag=wx.LEFT, border=12)
-        btn4.Bind(wx.EVT_BUTTON,  self.Model)
-        self.vbox2.Add(hbox4, flag=wx.RIGHT | wx.TOP, border=20)
-
-        self.panel2.SetSizer(self.vbox2)
-        self.Show()
-
-    def Model(self, event):
-
-        self.Nums = []
-        elements = [i.strip() for i in self.tc.GetValue().split(',') if i.strip()!='']
-#        print(elements)
-        self.Elements = elements
-#        exit()
-        Index_num = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-
-        for i in elements:
-
-            hbox = wx.BoxSizer(wx.HORIZONTAL)
-            element_index = wx.StaticText(self.panel2, label='Element:'+i)
-            element_index.SetFont(self.Font)
-            hbox.Add(element_index, flag=wx.LEFT | wx. TOP, border=15)
-#            self.element = wx.TextCtrl(self.panel2)
-#            self.element.Bind(wx.EVT_TEXT, self.OnElement)
-#            hbox.Add(self.element, proportion=1)
-
-            number_index = wx.StaticText(self.panel2, label='Number:')
-            hbox.Add(number_index, flag=wx.LEFT | wx. TOP, border=15)
-#        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
-            cb = wx.ComboBox(self.panel2, pos=(50, 30), choices=Index_num,
-                    style=wx.CB_READONLY)
-
-            self.st = wx.StaticText(self.panel2, label='', pos=(50, 140))
-            hbox.Add(cb, flag=wx.LEFT, border=12)
-            cb.Bind(wx.EVT_COMBOBOX, self.OnSelect)
-
-            self.SetSize((550, 530))
-#        self.SetTitle('wx.ComboBox')
-            self.vbox2.Add(hbox, flag=wx.RIGHT | wx.TOP, border=10)
-            self.vbox2.Add((-1, 10))
-         
-
-        Total_Atoms = 0
-        for i in self.Nums:
-            Total_Atoms = Total_Atoms + int(i)
-
-        hbox5 = wx.BoxSizer(wx.HORIZONTAL)
-        btn5 = wx.Button(self.panel2, label='OK', size=(50, 30))
-        hbox5.Add(btn5)
-#        btn5.Bind(wx.EVT_BUTTON,  self.Generate)
-        self.vbox2.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
-        btn5.Bind(wx.EVT_BUTTON,  self.Position)
-        self.vbox2.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
-        self.vbox2.Add((-1, 10))
-
-#        self.vbox.Add((-1, 10))
-#        btn3.Bind(wx.EVT_BUTTON,  self.Position)
-    def OnSelect(self, e):
-
-        i = e.GetString()
-        self.Nums.append(i)
-#        print(self.Nums)
-
-    def Position(self, event):
-
-#        print(self.Elements)
-#        print(self.Nums)
-        thirdWindow = window3(parent=self.panel2, Elements=self.Elements, Nums=self.Nums)
-        thirdWindow.Show()
+        pass
 
 class window3(wx.Frame):
 
@@ -329,11 +386,12 @@ class window3(wx.Frame):
 #        hbox0.Add(btn0, flag=wx.RIGHT, border=8)
 #        btn0.Bind(wx.EVT_BUTTON,  self.LoadFiles)
         self.vbox2.Add((-1, 10))
+        vector=['x','y','z']
 
         for i in range(3):
             vec_i=[]
             hbox = wx.BoxSizer(wx.HORIZONTAL)
-            str_vec = wx.StaticText(self.panel3, label='Vec_'+str(i))
+            str_vec = wx.StaticText(self.panel3, label='Vec_'+vector[i])
             hbox.Add(str_vec, 1, flag = wx.TOP, border=10)
 #            str_vec = wx.StaticText(self.panel3, label='Vec_1', pos=(500,50))
 #            dialo = wx.TextEntryDialog(self, "Choose Type of Elements")
@@ -366,7 +424,7 @@ class window3(wx.Frame):
         for i in range(Total_atoms):
             vec_i=[]
             hbox = wx.BoxSizer(wx.HORIZONTAL)
-            str_vec = wx.StaticText(self.panel3, label='Vec_'+str(i))
+            str_vec = wx.StaticText(self.panel3, label='Atom_'+str(i+1))
             hbox.Add(str_vec, 1, flag = wx.TOP, border=10)
 #            str_vec = wx.StaticText(self.panel3, label='Vec_1', pos=(500,50))
 #            dialo = wx.TextEntryDialog(self, "Choose Type of Elements")
@@ -389,11 +447,13 @@ class window3(wx.Frame):
             self.atom.append(vec_i)
 
         hbox5 = wx.BoxSizer(wx.HORIZONTAL)
-        btn1 = wx.Button(self.panel3, label='OK', size=(50, 30))
-        hbox5.Add(btn1, flag=wx.LEFT, border=12)
+        btn1 = wx.Button(self.panel3, label='OK')
+        hbox5.Add(btn1, flag=wx.LEFT, border=5)
         btn1.Bind(wx.EVT_BUTTON,  self.POSCAR)
+        self.vbox2.Add(hbox5, flag=wx.LEFT, border=5)
         self.panel3.SetSizer(self.vbox2)
-        self.Show()
+        self.Layout()
+
 
     def POSCAR(self, event):
         print(self.name)
