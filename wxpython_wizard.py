@@ -25,7 +25,7 @@ class configWizard(wx.adv.Wizard):
     def OnPageChanging(self, e):
         print(e.GetPage())
         print('TEST')
-        # e.GetPage().StoreData()
+#        print(e.GetPage().StoreData())
 
     def OnPageChanged(self, e):
         if e.GetPage().AllowNext():
