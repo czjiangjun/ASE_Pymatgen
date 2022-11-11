@@ -476,7 +476,7 @@ class window3(wx.Frame):
 def main():
 
     app = wx.App()
-    ex = Example(None, title='Go To Class')
+    ex = Example(None, title='File_Of_Structure')
     ex.Show()
     app.MainLoop()
 
