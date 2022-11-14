@@ -59,6 +59,27 @@ class Info1Page(wx.adv.WizardPageSimple):
         print(2)
         return False
 
+class Info2Page(wx.adv.WizardPageSimple):
+    def __init__(self, parent, title):
+        wx.adv.WizardPageSimple.__init__(self, parent)
+        sizer = wx.GridBagSizer(5, 5)
+        self.sizer = sizer
+        self.SetSizer(sizer)
+
+        title = wx.StaticText(self, -1, title)
+        title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
+        sizer.Add(title, pos=(0, 0), span=(1, 2), flag=wx.ALIGN_CENTRE | wx.ALL)
+        sizer.Add(wx.StaticLine(self, -1), pos=(1, 0), span=(1, 2), flag=wx.EXPAND | wx.ALL)
+        sizer.AddGrowableCol(1)
+
+    def  AllowNext(self):
+        print(1)
+        return True
+
+    def AllowBack(self):
+        print(2)
+        return True
+
 class PanelOne(wx.Panel):
     """""" 
     def __init__(self, parent):
@@ -114,6 +135,7 @@ class PanelTwo(wx.Panel):
         self.Centre()
 
     def Generate_UI(self):
+#        configWizard()
         self.sizer = wx.BoxSizer(wx.VERTICAL)
 #        sizer.Add(self.grid, 0, wx.EXPAND)
 
@@ -456,21 +478,31 @@ class window3(wx.Frame):
 
 
     def POSCAR(self, event):
-        print(self.name)
-        print('   1.000000')
+        Poscar_File = open('POSCAR', 'w')
+        Poscar_File.writelines(' '+self.name+'\n')
+        Poscar_File.writelines(' 1.000000\n')
         for i in range(3):
+            Poscar_File.writelines('  ')
             for j in self.vec[i]:
-                print(j.GetValue())
-        print(self.atoms)
-        print(self.nums)
+                Poscar_File.writelines(j.GetValue()+'  ')
+            Poscar_File.writelines('\n')
+        Poscar_File.writelines(' ')
+        for i in self.atoms:
+            Poscar_File.writelines(i+'  ')
+        Poscar_File.writelines('\n')
+        Poscar_File.writelines(' ')
+        for i in self.nums:
+            Poscar_File.writelines(i+'  ')
+        Poscar_File.writelines('\n')
         if (self.cb.GetValue()):
-            print('Select Dynamics')
-        print('Direct')
-        self.Destroy()
+            Poscar_File.writelines(' Select Dynamics\n')
+        Poscar_File.writelines(' Direct\n')
         for i in range(self.total):
+            Poscar_File.writelines('  ')
             for j in self.atom[i]:
-                print(j.GetValue())
-
+                Poscar_File.writelines(j.GetValue()+'  ')
+            Poscar_File.writelines('\n')
+        self.Destroy()
 
 
 def main():
