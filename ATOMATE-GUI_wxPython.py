@@ -146,7 +146,7 @@ class PanelTwo(wx.Panel):
         self.sizer.Add((-1, 80))
 #        self.vbox2 = wx.BoxSizer(wx.VERTICAL)
         hbox3 = wx.BoxSizer(wx.HORIZONTAL)
-        str_element = wx.StaticText(self, label='Type_of_Elements, separated by comma')
+        str_element = wx.StaticText(self, label='Type_of_Elements (separated by comma) :')
 #        dialog = wx.TextEntryDialog(self, "Choose Type of Elements")
         str_element.SetFont(self.Font)
         hbox3.Add(str_element, flag=wx.LEFT | wx. TOP, border=20)
@@ -208,7 +208,6 @@ class PanelTwo(wx.Panel):
 #        btn5.Bind(wx.EVT_BUTTON,  self.Generate)
         self.sizer.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
         btn5.Bind(wx.EVT_BUTTON,  self.Position)
-        self.sizer.Add(hbox5, flag=wx.RIGHT | wx.TOP, border=10)
         self.sizer.Add((-1, 10))
 
         self.SetSizer(self.sizer)
@@ -371,6 +370,10 @@ class window3(wx.Frame):
         self.panel3=wx.Panel(self, -1)
 #        print(Nums)
 #        exit()
+#        self.sizer = wx.GridBagSizer(5, 5)
+#        self.SetSizer(self.sizer)
+        self.SetSize((850, 630))
+#        self.SetupScrolling()
         self.Position_UI(Elements, Nums)
         self.Centre()
 
@@ -403,6 +406,7 @@ class window3(wx.Frame):
 #        str_element.SetFont(self.Font)
         hbox0.Add(str_element, flag=wx.RIGHT, border=25)
         self.vbox2.Add(hbox0, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=40)
+#        self.sizer.Add(hbox0, (0,0),(1,1), wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=40)
 
 #        btn0 = wx.Button(self.panel3, label='Open', pos=(500,0), size=(50, 20))
 #        hbox0.Add(btn0, flag=wx.RIGHT, border=8)
@@ -475,6 +479,7 @@ class window3(wx.Frame):
         self.vbox2.Add(hbox5, flag=wx.LEFT, border=5)
         self.panel3.SetSizer(self.vbox2)
         self.Layout()
+#        self.sizer.AddGrowableCol(1)
 
 
     def POSCAR(self, event):
