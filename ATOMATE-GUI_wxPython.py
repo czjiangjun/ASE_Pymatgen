@@ -93,7 +93,7 @@ class PanelOne(wx.Panel):
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
-        font.SetPointSize(12)
+        font.SetPointSize(9)
 
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
         self.vbox.Add((-1, 80))
@@ -140,7 +140,7 @@ class PanelTwo(wx.Panel):
 #        sizer.Add(self.grid, 0, wx.EXPAND)
 
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
-        font.SetPointSize(12)
+        font.SetPointSize(9)
         self.Font = font
 
         self.sizer.Add((-1, 80))
@@ -154,11 +154,11 @@ class PanelTwo(wx.Panel):
 
         hbox4 = wx.BoxSizer(wx.HORIZONTAL)
         self.tc = wx.TextCtrl(self)
-        hbox4.Add(self.tc, proportion=1, flag=wx.LEFT | wx. TOP)
-        btn4 = wx.Button(self, label='Modeling', size=(80, 30))
-        hbox4.Add(btn4, flag=wx.LEFT, border=12)
+        hbox4.Add(self.tc, proportion=1, flag=wx.EXPAND|wx.RIGHT|wx.LEFT|wx.TOP,border=10)
+        btn4 = wx.Button(self, label='Modeling', size=(80, 10))
+        hbox4.Add(btn4, flag=wx.EXPAND|wx.RIGHT|wx.LEFT|wx.TOP, border=10)
         btn4.Bind(wx.EVT_BUTTON,  self.Model)
-        self.sizer.Add(hbox4, flag=wx.RIGHT | wx.TOP, border=20)
+        self.sizer.Add(hbox4, flag=wx.RIGHT | wx.TOP, border=10)
 
         self.SetSizer(self.sizer)
         self.Show()
@@ -279,6 +279,12 @@ class Example(wx.Frame):
 #        btn1.Bind(wx.EVT_BUTTON, self.newwindow, btn1)
         self.btn1.Bind(wx.EVT_BUTTON,  self.Generate)
 
+        self.sizer.Add((-1, 10))
+        hbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer.Add(hbox3, flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, border=10)
+        self.btn3 = wx.Button(self, label='Exit', size=(50, 30))
+        hbox3.Add(self.btn3, flag=wx.LEFT, border=8)
+        self.btn3.Bind(wx.EVT_BUTTON,  self.OnExit)
         self.SetSizer(self.sizer)
 
     def Generate(self, event):
@@ -396,7 +402,7 @@ class window3(wx.Frame):
         self.total=Total_atoms
         font = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
 
-        font.SetPointSize(12)
+        font.SetPointSize(9)
         self.Font = font
 
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
